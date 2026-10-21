@@ -108,7 +108,21 @@ docker compose restart llm-mock
 
 Ранер перевіряє, що кожен мок-крок справді відповів моком: якщо відповідь
 відрізняється від сценарію, він зупиняється з `ERROR: step N was meant to come
-from the mock`. Найчастіша причина — стенд запущено без override.
+from the mock`. Найчастіша причина — стенд запущено без override. Друга — мок не підхопив файл під час старту і стоїть порожній. Перевірка:
+
+```bash
+curl -s -X PUT "localhost:1080/mockserver/retrieve?type=ACTIVE_EXPECTATIONS" -d '{}' \
+  | python3 -c 'import json,sys; print("expectations:", len(json.load(sys.stdin)))'
+```
+
+Має бути `expectations: 17` (або стільки, скільки записів у вашому `mock/expectations.json`). Якщо `0`, завантажте файл без перезапуску:
+
+```bash
+curl -s -X PUT localhost:1080/mockserver/expectation -H 'content-type: application/json' \
+  -d @mock/expectations.json -o /dev/null -w "%{http_code}\n"
+```
+
+Відповідь `201` — записи на місці. Ті самі записи видно в дашборді мока: `http://localhost:1080/mockserver/dashboard`, панель Active Expectations.
 
 ## Перевірки живого кроку
 
