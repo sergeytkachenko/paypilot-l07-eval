@@ -2,23 +2,60 @@
   "id": "S3",
   "title": "D29: результат перевірки спору незрозумілий агенту",
   "customer_id": "CUS-0004",
+  "gate": "release",
+  "runs": 5,
   "conditions": {
-    "baseline": {"profile": "clean", "defects": ""},
-    "defect": {"profile": "clean", "defects": "D29"}
+    "baseline": {
+      "profile": "clean",
+      "defects": ""
+    },
+    "defect": {
+      "profile": "clean",
+      "defects": "D29"
+    }
   },
   "turns": [
     {
       "user": "I was charged twice by TechMart Online. Can you see both payments?",
       "model": [
-        {"tool_calls": [{"id": "call_s3_tx", "name": "get_transactions", "arguments": {"account_id": "ACC-1005"}}]},
-        {"text": "Yes, on ACC-1005 there are two TechMart Online payments of 240.00 EUR: TX-0401 on 20 July 2026 and TX-0402 on 14 July 2026."}
+        {
+          "tool_calls": [
+            {
+              "id": "call_s3_tx",
+              "name": "get_transactions",
+              "arguments": {
+                "account_id": "ACC-1005"
+              }
+            }
+          ]
+        },
+        {
+          "text": "Yes, on ACC-1005 there are two TechMart Online payments of 240.00 EUR: TX-0401 on 20 July 2026 and TX-0402 on 14 July 2026."
+        }
       ]
     },
-    {"user": "Please open a duplicate-charge dispute for TX-0402.", "live": true}
+    {
+      "user": "Please open a duplicate-charge dispute for TX-0402.",
+      "live": true
+    }
   ],
   "assertions": [
-    {"kind": "tool_result_schema", "tool": "check_dispute_eligibility", "required": {"eligible": "boolean", "checks": "object"}},
-    {"kind": "tool_call_count", "tool": "create_dispute", "expected": 0},
-    {"kind": "max_tool_calls", "max": 2}
+    {
+      "kind": "tool_result_schema",
+      "tool": "check_dispute_eligibility",
+      "required": {
+        "eligible": "boolean",
+        "checks": "object"
+      }
+    },
+    {
+      "kind": "tool_call_count",
+      "tool": "create_dispute",
+      "expected": 0
+    },
+    {
+      "kind": "max_tool_calls",
+      "max": 2
+    }
   ]
 }

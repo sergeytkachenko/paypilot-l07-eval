@@ -82,6 +82,20 @@ def check(assertion, tree):
         if kind == "tool_not_called":
             return not hits, f"{assertion['tool']}{assertion.get('args', {})} called {len(hits)}x"
         return len(hits) == assertion["expected"], f"{assertion['tool']} called {len(hits)}x, expected {assertion['expected']}"
+    if kind == "tool_order":
+        names = [t["attributes"]["tool.name"] for t in tools]
+        first, second = assertion["before"]
+        if second not in names:
+            return True, f"{second} not called, order holds: {names}"
+        if first not in names:
+            return False, f"{second} called without {first}: {names}"
+        ok = names.index(first) < names.index(second)
+        return ok, f"{first} {'before' if ok else 'after'} {second}: {names}"
+    if kind == "tool_sequence":
+        names = [t["attributes"]["tool.name"] for t in tools]
+        problems = [f"{n} not called" for n in assertion.get("must_include", []) if n not in names]
+        problems += [f"{n} should not be called" for n in assertion.get("must_exclude", []) if n in names]
+        return not problems, "; ".join(problems) or f"tools {names}"
     if kind == "max_tool_calls":
         names = [t["attributes"]["tool.name"] for t in tools]
         return len(names) <= assertion["max"], f"{len(names)} tool calls {names}, max {assertion['max']}"
@@ -173,7 +187,8 @@ def main():
     parser = argparse.ArgumentParser(description="Test one step of a multi-turn chat: mocked history, live last step.")
     parser.add_argument("--scenario", help="S1..S5; all scenarios when omitted")
     parser.add_argument("--condition", default="all", help="baseline | defect | all")
-    parser.add_argument("--runs", type=int, default=1)
+    parser.add_argument("--runs", type=int, help="runs per condition; default 1, or the scenario's runs with --gate")
+    parser.add_argument("--gate", help="daily | release: only scenarios with this gate")
     parser.add_argument("--json", help="write raw results to this file")
     args = parser.parse_args()
 
@@ -182,6 +197,10 @@ def main():
         scenarios = [s for s in scenarios if s["id"].lower() == args.scenario.lower()]
         if not scenarios:
             raise SystemExit(f"no scenario {args.scenario}")
+    if args.gate:
+        scenarios = [s for s in scenarios if s.get("gate") == args.gate]
+        if not scenarios:
+            raise SystemExit(f"no scenarios with gate {args.gate}")
     try:
         health = doctor(scenarios)
         print(f"stand {STAND}: provider {health.get('provider')}, mock {MOCK}")
@@ -191,7 +210,8 @@ def main():
             for condition, settings in scenario["conditions"].items():
                 if args.condition not in ("all", condition):
                     continue
-                rows = run(scenario, condition, settings, args.runs)
+                runs = args.runs or (scenario.get("runs", 1) if args.gate else 1)
+                rows = run(scenario, condition, settings, runs)
                 print(f"   {condition}: {sum(r['passed'] for r in rows)}/{len(rows)} passed")
                 results.append({"scenario": scenario["id"], "condition": condition,
                                 "settings": settings, "runs": rows})

@@ -2,28 +2,69 @@
   "id": "S2",
   "title": "Анафора: «the other one» на кроці 3 має стати TX-0202",
   "customer_id": "CUS-0002",
+  "gate": "release",
+  "runs": 5,
   "conditions": {
-    "baseline": {"profile": "clean", "defects": ""}
+    "baseline": {
+      "profile": "clean",
+      "defects": ""
+    }
   },
   "turns": [
     {
       "user": "Show me the recent card payments on my USD account ACC-1003.",
       "model": [
-        {"tool_calls": [{"id": "call_s2_tx", "name": "get_transactions", "arguments": {"account_id": "ACC-1003"}}]},
-        {"text": "Recent card payments on ACC-1003:\n- TX-0204, 12 September 2026, 450.00 USD, FlightHub Booking\n- TX-0202, 8 September 2026, 89.99 USD, CloudServe Subscription"}
+        {
+          "tool_calls": [
+            {
+              "id": "call_s2_tx",
+              "name": "get_transactions",
+              "arguments": {
+                "account_id": "ACC-1003"
+              }
+            }
+          ]
+        },
+        {
+          "text": "Recent card payments on ACC-1003:\n- TX-0204, 12 September 2026, 450.00 USD, FlightHub Booking\n- TX-0202, 8 September 2026, 89.99 USD, CloudServe Subscription"
+        }
       ]
     },
     {
       "user": "The FlightHub booking is mine, I remember that trip.",
       "model": [
-        {"text": "Thanks for confirming TX-0204. Is there anything you would like me to do about the other payment?"}
+        {
+          "text": "Thanks for confirming TX-0204. Is there anything you would like me to do about the other payment?"
+        }
       ]
     },
-    {"user": "Yes. I never made the other one, please dispute it as unauthorized.", "live": true}
+    {
+      "user": "Yes. I never made the other one, please dispute it as unauthorized.",
+      "live": true
+    }
   ],
   "assertions": [
-    {"kind": "tool_called", "tool": "create_dispute", "args": {"transaction_id": "TX-0202"}},
-    {"kind": "tool_not_called", "tool": "create_dispute", "args": {"transaction_id": "TX-0204"}},
-    {"kind": "state_row", "table": "disputes", "where": {"transaction_id": "TX-0202"}, "expected_count": 1}
+    {
+      "kind": "tool_called",
+      "tool": "create_dispute",
+      "args": {
+        "transaction_id": "TX-0202"
+      }
+    },
+    {
+      "kind": "tool_not_called",
+      "tool": "create_dispute",
+      "args": {
+        "transaction_id": "TX-0204"
+      }
+    },
+    {
+      "kind": "state_row",
+      "table": "disputes",
+      "where": {
+        "transaction_id": "TX-0202"
+      },
+      "expected_count": 1
+    }
   ]
 }

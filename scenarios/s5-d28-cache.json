@@ -2,34 +2,74 @@
   "id": "S5",
   "title": "D28: кеш промпту не тримається на кроці 4",
   "customer_id": "CUS-0010",
+  "gate": "release",
+  "runs": 5,
   "conditions": {
-    "baseline": {"profile": "clean", "defects": ""},
-    "defect": {"profile": "clean", "defects": "D28"}
+    "baseline": {
+      "profile": "clean",
+      "defects": ""
+    },
+    "defect": {
+      "profile": "clean",
+      "defects": "D28"
+    }
   },
   "turns": [
     {
       "user": "Hi, which accounts do I have?",
       "model": [
-        {"tool_calls": [{"id": "call_s5_acc", "name": "get_account", "arguments": {}}]},
-        {"text": "You have one account, ACC-1011, in GBP. Your tier is tier3."}
+        {
+          "tool_calls": [
+            {
+              "id": "call_s5_acc",
+              "name": "get_account",
+              "arguments": {}
+            }
+          ]
+        },
+        {
+          "text": "You have one account, ACC-1011, in GBP. Your tier is tier3."
+        }
       ]
     },
     {
       "user": "What were my last two outgoing payments?",
       "model": [
-        {"tool_calls": [{"id": "call_s5_tx", "name": "get_transactions", "arguments": {"account_id": "ACC-1011", "limit": 2}}]},
-        {"text": "Your last two outgoing payments on ACC-1011 were a payroll batch of 4,200.00 GBP on 15 September 2026 and supplier invoice 2214 of 26,000.00 GBP on 2 September 2026."}
+        {
+          "tool_calls": [
+            {
+              "id": "call_s5_tx",
+              "name": "get_transactions",
+              "arguments": {
+                "account_id": "ACC-1011",
+                "limit": 2
+              }
+            }
+          ]
+        },
+        {
+          "text": "Your last two outgoing payments on ACC-1011 were a payroll batch of 4,200.00 GBP on 15 September 2026 and supplier invoice 2214 of 26,000.00 GBP on 2 September 2026."
+        }
       ]
     },
     {
       "user": "Thanks, that matches my records.",
       "model": [
-        {"text": "Glad it matches. Is there anything else I can help with?"}
+        {
+          "text": "Glad it matches. Is there anything else I can help with?"
+        }
       ]
     },
-    {"user": "What are my current daily and monthly transfer limits?", "live": true}
+    {
+      "user": "What are my current daily and monthly transfer limits?",
+      "live": true
+    }
   ],
   "assertions": [
-    {"kind": "cache_read_min", "from_call": 1, "min": 1000}
+    {
+      "kind": "cache_read_min",
+      "from_call": 1,
+      "min": 1000
+    }
   ]
 }

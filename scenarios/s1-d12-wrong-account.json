@@ -2,30 +2,86 @@
   "id": "S1",
   "title": "D12: спір на кроці 3 записано на інший рахунок",
   "customer_id": "CUS-0002",
+  "gate": "daily",
+  "runs": 1,
   "conditions": {
-    "baseline": {"profile": "clean", "defects": ""},
-    "defect": {"profile": "clean", "defects": "D12"}
+    "baseline": {
+      "profile": "clean",
+      "defects": ""
+    },
+    "defect": {
+      "profile": "clean",
+      "defects": "D12"
+    }
   },
   "turns": [
     {
       "user": "Which accounts do I have with you?",
       "model": [
-        {"tool_calls": [{"id": "call_s1_acc", "name": "get_account", "arguments": {}}]},
-        {"text": "You have two accounts: ACC-1002 in EUR and ACC-1003 in USD."}
+        {
+          "tool_calls": [
+            {
+              "id": "call_s1_acc",
+              "name": "get_account",
+              "arguments": {}
+            }
+          ]
+        },
+        {
+          "text": "You have two accounts: ACC-1002 in EUR and ACC-1003 in USD."
+        }
       ]
     },
     {
       "user": "On my USD account ACC-1003 there is a 89.99 CloudServe charge from 8 September that I never made.",
       "model": [
-        {"tool_calls": [{"id": "call_s1_tx", "name": "get_transactions", "arguments": {"account_id": "ACC-1003"}}]},
-        {"text": "I can see it on ACC-1003: TX-0202, 8 September 2026, 89.99 USD, CloudServe Subscription."}
+        {
+          "tool_calls": [
+            {
+              "id": "call_s1_tx",
+              "name": "get_transactions",
+              "arguments": {
+                "account_id": "ACC-1003"
+              }
+            }
+          ]
+        },
+        {
+          "text": "I can see it on ACC-1003: TX-0202, 8 September 2026, 89.99 USD, CloudServe Subscription."
+        }
       ]
     },
-    {"user": "Please dispute it as unauthorized.", "live": true}
+    {
+      "user": "Please dispute it as unauthorized.",
+      "live": true
+    }
   ],
   "assertions": [
-    {"kind": "tool_called", "tool": "create_dispute", "args": {"transaction_id": "TX-0202"}},
-    {"kind": "state_row", "table": "disputes", "where": {"transaction_id": "TX-0202"},
-     "expect_fields": {"account_id": "ACC-1003", "currency": "USD"}, "expected_count": 1}
+    {
+      "kind": "tool_called",
+      "tool": "create_dispute",
+      "args": {
+        "transaction_id": "TX-0202"
+      }
+    },
+    {
+      "kind": "tool_order",
+      "before": [
+        "check_dispute_eligibility",
+        "create_dispute"
+      ]
+    },
+    {
+      "kind": "state_row",
+      "table": "disputes",
+      "where": {
+        "transaction_id": "TX-0202"
+      },
+      "expect_fields": {
+        "account_id": "ACC-1003",
+        "currency": "USD"
+      },
+      "expected_count": 1
+    }
   ]
 }
