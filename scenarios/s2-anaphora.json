@@ -3,7 +3,7 @@
   "title": "Анафора: «the other one» на кроці 3 має стати TX-0202",
   "customer_id": "CUS-0002",
   "conditions": {
-    "baseline": {"profile": "clean"}
+    "baseline": {"profile": "clean", "defects": ""}
   },
   "turns": [
     {

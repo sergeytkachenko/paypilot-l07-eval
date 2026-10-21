@@ -3,7 +3,7 @@
   "title": "D28: кеш промпту не тримається на кроці 4",
   "customer_id": "CUS-0010",
   "conditions": {
-    "baseline": {"profile": "clean"},
+    "baseline": {"profile": "clean", "defects": ""},
     "defect": {"profile": "clean", "defects": "D28"}
   },
   "turns": [

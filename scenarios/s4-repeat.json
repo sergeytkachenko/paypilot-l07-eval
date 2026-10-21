@@ -3,7 +3,7 @@
   "title": "Повтор на кроці 2: той самий спір удруге не дає другого рядка",
   "customer_id": "CUS-0004",
   "conditions": {
-    "baseline": {"profile": "clean"}
+    "baseline": {"profile": "clean", "defects": ""}
   },
   "turns": [
     {

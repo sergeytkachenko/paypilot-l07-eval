@@ -3,7 +3,7 @@
   "title": "D29: результат перевірки спору незрозумілий агенту",
   "customer_id": "CUS-0004",
   "conditions": {
-    "baseline": {"profile": "clean"},
+    "baseline": {"profile": "clean", "defects": ""},
     "defect": {"profile": "clean", "defects": "D29"}
   },
   "turns": [

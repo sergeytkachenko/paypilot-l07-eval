@@ -3,7 +3,7 @@
   "title": "D12: спір на кроці 3 записано на інший рахунок",
   "customer_id": "CUS-0002",
   "conditions": {
-    "baseline": {"profile": "clean"},
+    "baseline": {"profile": "clean", "defects": ""},
     "defect": {"profile": "clean", "defects": "D12"}
   },
   "turns": [
