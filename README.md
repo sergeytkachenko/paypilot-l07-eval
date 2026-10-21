@@ -128,7 +128,7 @@ from the mock`. Найчастіша причина — стенд запуще�
 |---|---|---|---|
 | **S1** · D12 | «Please dispute it as unauthorized.» після двох мок-кроків | 5/5: рядок на ACC-1003, USD | 0/5: рядок на ACC-1002, EUR; аргументи виклику правильні |
 | **S2** · анафора | «I never made the other one» → має стати TX-0202 | 5/5 | — |
-| **S3** · D29 | «Please open a duplicate-charge dispute for TX-0402.» | 5/5: 1–2 інструменти, $0.0004–0.0006 | 0/5: результат без `eligible`/`checks` 5/5; 2–4 інструменти; до $0.0017; спір не відкрито 5/5 |
+| **S3** · D29 | «Please open a duplicate-charge dispute for TX-0402.» | 5/5: 1–2 інструменти, $0.0004–0.0006 | 0/5: результат без `eligible`/`checks` 5/5; **спір усе ж відкрито 3/5**; 2–4 інструменти; до $0.0017 |
 | **S4** · повтор | «Please open it again…» після мок-кроку, що вже відкрив спір | 5/5: один рядок | — |
 | **S5** · D28 | «What are my current daily and monthly transfer limits?» | 5/5: `cache_read` 2514 на другому виклику, ~$0.0003 | 4/5: `cache_read` 0, ~$0.00088; в одному прогоні провайдер кеш таки віддав |
 
