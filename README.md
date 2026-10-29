@@ -20,8 +20,11 @@ Python локально не потрібен: ранер іде в Docker, у �
 Корінь курсу — `~/paypilot`: стенд у `~/paypilot/paypilot-stand`, цей
 репозиторій — у `~/paypilot/l07`.
 
-1. Оновити стенд до коміту з D28 і D29 (`325e2dd` або новіше):
-   `cd ~/paypilot/paypilot-stand && git pull`.
+1. Оновити стенд до коміту з D28 і D29 (`325e2dd` або новіше). Стенд для L07
+   живе в [`paypilot-stand-shared`](https://github.com/sergeytkachenko/paypilot-stand-shared),
+   а не в старому `paypilot-stand`, тож наявний клон спершу перенаправте:
+   `cd ~/paypilot/paypilot-stand && git remote set-url origin https://github.com/sergeytkachenko/paypilot-stand-shared.git && git fetch origin && git reset --hard origin/main`.
+   Стенду ще немає: `git clone https://github.com/sergeytkachenko/paypilot-stand-shared.git ~/paypilot/paypilot-stand`.
 2. Склонувати кіт: `git clone https://github.com/sergeytkachenko/paypilot-l07-eval.git ~/paypilot/l07`.
 3. Підняти мок: `cd ~/paypilot/l07 && docker compose up -d llm-mock`.
 4. Перезапустити стенд за проксі (з каталогу стенду):
